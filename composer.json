@@ -5,5 +5,8 @@
         "psr-4": {
             "BasicApp\\Controller\\": ""
         }
+    },
+    "require": {
+        "basic-app/action": "*"
     }
 }
