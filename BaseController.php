@@ -7,10 +7,13 @@
 namespace BasicApp\Controller;
 
 use BasicApp\Action\ActionsTrait;
+use BasicApp\Controller\RenderTrait;
 
 abstract class BaseController extends \CodeIgniter\Controller
 {
 
     use ActionsTrait;
+
+    use RenderTrait;
 
 }
