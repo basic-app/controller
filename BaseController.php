@@ -13,8 +13,6 @@ abstract class BaseController extends \CodeIgniter\Controller
 
     use ActionsTrait;
 
-    use RenderTrait;
-
-    use RedirectBackTrait;
+    use ControllerTrait;
 
 }
