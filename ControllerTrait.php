@@ -30,7 +30,7 @@ trait ControllerTrait
 
     public function redirectBack(string $defaultUri = null, array $params = [])
     {
-        $uri = $this->request->getGet('returnUrl');
+        $uri = $this->request->getGet('backUrl');
 
         if (!$uri)
         {
@@ -45,7 +45,7 @@ trait ControllerTrait
         }
         else
         {
-            $url = site_url($url);
+            $url = site_url($uri);
         }
 
         return $this->redirect($url);
