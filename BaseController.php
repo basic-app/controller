@@ -6,12 +6,12 @@
  */
 namespace BasicApp\Controller;
 
-use BasicApp\Action\ActionTrait;
+use BasicApp\Action\ControllerActionsTrait;
 
 abstract class BaseController extends \CodeIgniter\Controller
 {
 
-    use ActionTrait;
+    use ControllerActionsTrait;
 
     use ControllerTrait;
 
