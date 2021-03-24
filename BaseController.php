@@ -15,4 +15,10 @@ abstract class BaseController extends \CodeIgniter\Controller
 
     use ControllerTrait;
 
+    protected $defaultActions = [];
+    
+    protected $actions = [];
+
+    protected $allowedActions = null;
+
 }
