@@ -6,19 +6,13 @@
  */
 namespace BasicApp\Controller;
 
-use BasicApp\Action\ActionControllerTrait;
-
-abstract class BaseController extends \CodeIgniter\Controller
+class Controller extends BaseController
 {
-
-    use ActionTrait;
-
-    use ControllerTrait;
 
     protected $defaultActions = [];
     
     protected $actions = [];
 
-    protected $allowedActions = null;
+    protected $allowedActions = null;    
 
 }
