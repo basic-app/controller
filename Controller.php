@@ -11,7 +11,7 @@ use BasicApp\Action\ActionControllerTrait;
 abstract class BaseController extends \CodeIgniter\Controller
 {
 
-    use ActionControllerTrait;
+    use ActionTrait;
 
     use ControllerTrait;
 
