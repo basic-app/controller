@@ -56,9 +56,9 @@ trait ActionsTrait
         throw PageNotFoundException::forPageNotFound();        
     }
 
-    protected function createAction($actionClass, ...$params) : ActionInterface
+    protected function createAction(string $actionClass, array $params = []) : ActionInterface
     {
-        $action = new $actionClass($this, ...$params);
+        $action = new $actionClass($this, $params);
 
         return $action;
     }
