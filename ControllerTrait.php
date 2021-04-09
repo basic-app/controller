@@ -9,20 +9,6 @@ namespace BasicApp\Controller;
 trait ControllerTrait
 {
 
-    protected $viewsNamespace;
-
-    protected function getViewsNamespace() : ?string
-    {
-        return $this->viewsNamespace;
-    }
-
-    protected function render(string $view, array $params = []) : string
-    {
-        $namespace = $this->getViewsNamespace();
-
-        return view($namespace ?  $namespace . "\\" . $view : $view, $params);
-    }
-
     public function redirect(string $url)
     {
         return redirect()->withCookies()->to($url);
