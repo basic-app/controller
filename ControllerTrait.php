@@ -6,6 +6,9 @@
  */
 namespace BasicApp\Controller;
 
+use CodeIgniter\Security\Exceptions\SecurityException;
+use CodeIgniter\Exceptions\PageNotFoundException;
+
 trait ControllerTrait
 {
 
@@ -35,6 +38,16 @@ trait ControllerTrait
         }
 
         return $this->redirect($url);
+    }
+
+    public function throwSecurityException(?string $message = null)
+    {
+        throw SecurityException::forDisallowedAction($message);
+    }
+
+    public function throwPageNotFoundException(?string $message = null)
+    {
+        throw PageNotFoundException::forPageNotFound($message);
     }
 
 }
