@@ -14,30 +14,24 @@ trait ControllerTrait
 
     public function redirect(string $url)
     {
-        return redirect()->withCookies()->to($url);
+        return redirect()->withCookies()->to(site_url($url));
     }
 
-    public function redirectBack(string $defaultUri = null, array $params = [])
+    public function redirectBack(string $default = null)
     {
-        $uri = $this->request->getGet('backUrl');
+        $url = $this->request->getGet('backUrl');
 
-        if (!$uri)
+        if ($uri)
         {
-            $uri = $defaultUri;
+            return $this->redirect($url);
         }
 
-        helper(['url']);
-
-        if (!$uri)
+        if ($default)
         {
-            $url = base_url();
+            return $this->redirect($default);
         }
-        else
-        {
-            $url = site_url($uri);
-        }
-
-        return $this->redirect($url);
+    
+        return redirect()->withCookies()->back();
     }
 
     public function throwSecurityException(?string $message = null)
