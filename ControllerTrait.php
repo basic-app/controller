@@ -21,7 +21,7 @@ trait ControllerTrait
     {
         $url = $this->request->getGet('backUrl');
 
-        if ($uri)
+        if ($url)
         {
             return $this->redirect($url);
         }
