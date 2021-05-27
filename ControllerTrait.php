@@ -36,7 +36,7 @@ trait ControllerTrait
 
     public function throwSecurityException(?string $message = null)
     {
-        throw SecurityException::forDisallowedAction($message);
+        throw new SecurityException($message ?? 'Forbidden', 403);
     }
 
     public function throwPageNotFoundException(?string $message = null)
