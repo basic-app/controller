@@ -39,18 +39,7 @@ trait ActionsTrait
                 $action = $this->createAction($actions[$method]);
             }
 
-            $return = $action->_remap($method, ...$params);
-
-            if ($return instanceof Closure)
-            {
-                $return = $return->bindTo($this, $this);
-
-                assert($return ? true : false);
-
-                return $return($method, ...$params);
-            }
-
-            return $return;
+            return $action->execute($method, $params);
         }
 
         throw PageNotFoundException::forPageNotFound();        
