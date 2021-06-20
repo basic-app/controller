@@ -17,7 +17,7 @@ trait ActionsTrait
 
     protected $defaultActions = [];
 
-    protected $allowedActions = [];
+    protected $allowedActions;
 
     protected function getActions() : array
     {
@@ -54,7 +54,7 @@ trait ActionsTrait
 
     protected function isActionAllowed(string $action) : bool
     {
-        if ($this->allowedActions)
+        if ($this->allowedActions !== null)
         {
             if (array_search($action, $this->allowedActions) !== false)
             {
