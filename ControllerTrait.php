@@ -12,6 +12,19 @@ use CodeIgniter\Exceptions\PageNotFoundException;
 trait ControllerTrait
 {
 
+    protected $viewsNamespace;
+
+    protected $viewsPath;
+
+    protected function render(string $view, array $params = []) : string
+    {
+        $view = $this->viewsPath ? $this->viewsPath . '/' . $view : $view;
+
+        $view = $this->viewsNamespace ? $this->viewsNamespace . "\\" . $view : $view;
+
+        return view($view, $params);
+    }    
+
     public function redirect(string $url)
     {
         return redirect()->withCookies()->to(site_url($url));
