@@ -31,15 +31,15 @@ trait ControllerTrait
 
         if ($backUrl)
         {
-            return redirect()->to($backUrl);
+            return redirect()->withCookies()->to($backUrl);
         }
 
         if ($defaultUrl)
         {
-            return $this->redirect()->to($defaultUrl);
+            return $this->redirect()->withCookies()->to($defaultUrl);
         }
     
-        return redirect()->back();
+        return redirect()->withCookies()->back();
     }
 
     public function throwSecurityException(?string $message = null)
