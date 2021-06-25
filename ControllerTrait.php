@@ -25,26 +25,21 @@ trait ControllerTrait
         return view($view, $params);
     }    
 
-    public function redirect(string $url)
+    public function redirectBack(string $defaultUrl = null)
     {
-        return redirect()->withCookies()->to(site_url($url));
-    }
+        $backUrl = $this->request->getGet('backUrl');
 
-    public function redirectBack(string $default = null)
-    {
-        $url = $this->request->getGet('backUrl');
-
-        if ($url)
+        if ($backUrl)
         {
-            return $this->redirect($url);
+            return redirect()->to($backUrl);
         }
 
-        if ($default)
+        if ($defaultUrl)
         {
-            return $this->redirect($default);
+            return $this->redirect()->to($defaultUrl);
         }
     
-        return redirect()->withCookies()->back();
+        return redirect()->back();
     }
 
     public function throwSecurityException(?string $message = null)
