@@ -16,7 +16,7 @@ trait ControllerTrait
 
     protected $viewsPath;
 
-    protected function render(string $view, array $params = []) : string
+    protected function render(string $view, array $params = [])
     {
         $view = $this->viewsPath ? $this->viewsPath . '/' . $view : $view;
 
