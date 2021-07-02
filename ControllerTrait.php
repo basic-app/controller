@@ -8,6 +8,7 @@ namespace BasicApp\Controller;
 
 use CodeIgniter\Security\Exceptions\SecurityException;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use CodeIgniter\Database\Exceptions\DataException;
 
 trait ControllerTrait
 {
@@ -15,6 +16,26 @@ trait ControllerTrait
     protected $viewsNamespace;
 
     protected $viewsPath;
+
+    protected function trigger(string $event, array $eventData)
+    {
+        if (!isset($this->{$event}) || empty($this->{$event}))
+        {
+            return $eventData;
+        }
+
+        foreach ($this->{$event} as $callback)
+        {
+            if (!method_exists($this, $callback))
+            {
+                throw DataException::forInvalidMethodTriggered($callback);
+            }
+
+            $eventData = $this->{$callback}($eventData);
+        }
+
+        return $eventData;
+    }
 
     protected function render(string $view, array $params = [])
     {
