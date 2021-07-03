@@ -8,7 +8,6 @@ namespace BasicApp\Controller;
 
 use Closure;
 use CodeIgniter\Exceptions\PageNotFoundException;
-use BasicApp\Action\ActionInterface;
 use Webmozart\Assert\Assert;
 
 trait ActionsTrait
@@ -36,23 +35,23 @@ trait ActionsTrait
             }
         }
 
-        throw PageNotFoundException::forPageNotFound();        
+        throw PageNotFoundException::forPageNotFound(lang('Page not found.'));        
     }
 
-    public function runAction(string $actionClass, string $method = null, ...$params)
+    protected function runAction(string $actionClass, string $method = null, ...$params)
     {
         if (!$this->isActionAllowed($method, $error))
         {
-            throw PageNotFoundException::forPageNotFound($error ?? 'Page not found.');
+            throw PageNotFoundException::forPageNotFound($error ?? lang('Page not found.'));
         }
 
         $action = new $actionClass($this, $params);
 
-        $return = $this->run($method, ...$params);
+        $return = $action->run($method, ...$params);
 
         if ($return instanceof Closure)
         {
-            Assert::notEmpty($return->bindTo($this, $this), 'Bind failed.');
+            Assert::notEmpty($return->bindTo($this, $this), lang('Bind failed.'));
 
             return $return($method, ...$params);
         }
