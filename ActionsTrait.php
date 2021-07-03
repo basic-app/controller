@@ -9,6 +9,7 @@ namespace BasicApp\Controller;
 use Closure;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use BasicApp\Action\ActionInterface;
+use Webmozart\Assert\Assert;
 
 trait ActionsTrait
 {
@@ -19,40 +20,47 @@ trait ActionsTrait
 
     protected $allowedActions;
 
-    protected function getActions() : array
-    {
-        return array_merge($this->defaultActions, $this->actions);
-    }
-
     protected function remapAction($method, ...$params)
     {
-        $actions = $this->getActions();
+        $actions = array_merge($this->defaultActions, $this->actions);
 
-        if (array_key_exists($method, $actions) && $actions[$method] && $this->isActionAllowed($method))
+        if (array_key_exists($method, $actions) && $actions[$method])
         {
             if (is_array($actions[$method]))
             {
-                $action = call_user_func_array([$this, 'createAction'], $actions[$method]);
+                return call_user_func_array([$this, 'runAction'], $actions[$method]);
             }
             else
             {
-                $action = $this->createAction($actions[$method]);
+                return $this->runAction($actions[$method]);
             }
-
-            return $action->execute($method, $params);
         }
 
         throw PageNotFoundException::forPageNotFound();        
     }
 
-    protected function createAction(string $actionClass, array $params = []) : ActionInterface
+    public function runAction(string $actionClass, string $method = null, ...$params)
     {
+        if (!$this->isActionAllowed($method, $error))
+        {
+            throw PageNotFoundException::forPageNotFound($error ?? 'Page not found.');
+        }
+
         $action = new $actionClass($this, $params);
 
-        return $action;
+        $return = $this->run($method, ...$params);
+
+        if ($return instanceof Closure)
+        {
+            Assert::notEmpty($return->bindTo($this, $this), 'Bind failed.');
+
+            return $return($method, ...$params);
+        }
+
+        return $return;
     }
 
-    protected function isActionAllowed(string $action) : bool
+    protected function isActionAllowed(string $action, &$error = null) : bool
     {
         if ($this->allowedActions !== null)
         {

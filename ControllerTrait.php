@@ -65,7 +65,7 @@ trait ControllerTrait
 
     public function throwSecurityException(?string $message = null)
     {
-        throw new SecurityException($message ?? 'Forbidden', 403);
+        throw new SecurityException($message ?? lang('Forbidden'), 403);
     }
 
     public function throwPageNotFoundException(?string $message = null)
