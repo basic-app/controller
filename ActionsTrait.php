@@ -9,6 +9,7 @@ namespace BasicApp\Controller;
 use Closure;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use Webmozart\Assert\Assert;
+use BasicApp\Action\ActionInterface;
 
 trait ActionsTrait
 {
@@ -25,45 +26,51 @@ trait ActionsTrait
 
         if (array_key_exists($method, $actions) && $actions[$method])
         {
+            if (!$this->isActionAllowed($method, $error))
+            {
+                throw PageNotFoundException::forPageNotFound($error ?? lang('Page not found.'));
+            }
+
             if (is_array($actions[$method]))
             {
-                return call_user_func_array([$this, 'runAction'], $actions[$method]);
+                $action = call_user_func_array([$this, 'createAction'], $actions[$method]);
             }
             else
             {
-                return $this->runAction($actions[$method]);
+                $action = $this->createAction($actions[$method]);
             }
+
+            $action->initialize($method);
+
+            if (!$this->beforeAction($action, $error))
+            {
+                $this->throwSecurityException($error ?? lang('Access denied.'));
+            }
+
+            return $action->execute(...$params);
         }
 
         throw PageNotFoundException::forPageNotFound(lang('Page not found.'));        
     }
 
-    protected function runAction(string $actionClass, string $method = null, ...$params)
+    protected function createAction(string $actionClass, array $params = [])
     {
-        if (!$this->isActionAllowed($method, $error))
-        {
-            throw PageNotFoundException::forPageNotFound($error ?? lang('Page not found.'));
-        }
-
         $action = new $actionClass($this, $params);
 
-        $return = $action->run($method, ...$params);
+        $action->setLogger($this->logger);
 
-        if ($return instanceof Closure)
-        {
-            Assert::notEmpty($return->bindTo($this, $this), lang('Bind failed.'));
+        $action->setRequest($this->request);
 
-            return $return($method, ...$params);
-        }
+        $action->setResponse($this->response);
 
-        return $return;
+        return $action;
     }
 
-    protected function isActionAllowed(string $action, &$error = null) : bool
+    protected function isActionAllowed(string $actionClass, &$error = null) : bool
     {
         if ($this->allowedActions !== null)
         {
-            if (array_search($action, $this->allowedActions) !== false)
+            if (array_search($actionClass, $this->allowedActions) !== false)
             {
                 return true;
             }
@@ -73,6 +80,11 @@ trait ActionsTrait
             }
         }
 
+        return true;
+    }
+
+    protected function beforeAction(ActionInterface $action, &$error = null) : bool
+    {
         return true;
     }
 
